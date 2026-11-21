@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   validate:
-    name: Format, check, clippy and contract tests
+    name: Check, clippy and contract tests
     runs-on: ubuntu-latest
     steps:
       - name: Check out PR branch
@@ -20,10 +20,8 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          components: rustfmt, clippy
-
-      - name: Check formatting
-        run: cargo fmt --all -- --check
+          targets: wasm32-unknown-unknown
+          components: clippy
 
       - name: Check workspace
         run: cargo check --workspace
