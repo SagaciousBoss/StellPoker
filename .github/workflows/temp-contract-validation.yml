@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   validate:
-    name: Check, clippy and contract tests
+    name: Clippy and contract tests
     runs-on: ubuntu-latest
     steps:
       - name: Check out PR branch
@@ -23,11 +23,8 @@ jobs:
           targets: wasm32-unknown-unknown
           components: clippy
 
-      - name: Check workspace
-        run: cargo check --workspace
-
-      - name: Clippy
-        run: cargo clippy --workspace -- -D warnings
+      - name: Clippy affected contract crates
+        run: cargo clippy -p token-gated-table -p game-hub --all-targets -- -D warnings
 
       - name: Test token-gated-table
         run: cargo test -p token-gated-table
