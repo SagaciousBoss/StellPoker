@@ -1,0 +1,27 @@
+name: temp 1010 validation
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: ref to validate
+        required: true
+        default: fix/1008-1009-1011-auth-and-api-parity
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: SagaciousBoss/StellPoker
+          ref: ${{ inputs.ref }}
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Admin auth middleware tests
+        run: cargo test -p coordinator admin_auth_middleware
+      - name: API parity checks
+        run: |
+          python3 -m pip install --quiet pyyaml pytest
+          python3 scripts/check-api-spec.py
+          python3 -m pytest tests/test_api_conformance.py -v
+      - name: Ensure no admin allowlist literals in client
+        run: |
+          if grep -R -n -E "GADMIN111111|GBRPYHIL2CI3FNQ4" app/src; then exit 1; fi
