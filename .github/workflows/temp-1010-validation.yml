@@ -1,5 +1,7 @@
 name: temp 1010 validation
 on:
+  push:
+    branches: [temp-validation-1010]
   workflow_dispatch:
     inputs:
       ref:
